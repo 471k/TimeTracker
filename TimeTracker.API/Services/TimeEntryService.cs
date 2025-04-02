@@ -42,6 +42,16 @@ namespace TimeTracker.API.Services
             return result.Adapt<List<TimeEntryResponse>>();
         }
 
+        public List<TimeEntryResponse> DeleteTimeEntry(int id)
+        {
+            var result = _timeEntryRepo.DeleteTimeEntry(id);
+            if(result is null)
+            {
+                return null;
+            }
+            return result.Adapt<List<TimeEntryResponse>>();
+        }
+
         public List<TimeEntryResponse> GetAllTimeEntries()
         {
             var result = _timeEntryRepo.GetAllTimeEntries();
@@ -55,6 +65,18 @@ namespace TimeTracker.API.Services
             }).ToList();*/
 
             //implementation using Mapster extension
+            return result.Adapt<List<TimeEntryResponse>>();
+        }
+
+        public List<TimeEntryResponse> UpdateTimeEntry(int id, TimeEntryUpdateRequest request)
+        {
+            var updatedEntry = request.Adapt<TimeEntry>();
+            var result = _timeEntryRepo.UpdateTimeEntry(id, updatedEntry);
+            if(result is null)
+            {
+                return null;
+            }
+
             return result.Adapt<List<TimeEntryResponse>>();
         }
     }

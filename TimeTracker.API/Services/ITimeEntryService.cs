@@ -1,4 +1,5 @@
-﻿using TimeTracker.Shared.Models;
+﻿using System.Net;
+using TimeTracker.Shared.Models;
 
 namespace TimeTracker.API.Services
 {
@@ -6,5 +7,7 @@ namespace TimeTracker.API.Services
     {
         List<TimeEntryResponse> GetAllTimeEntries();
         List<TimeEntryResponse> CreateTimeEntry(TimeEntryCreateRequest timeEntry);
+        List<TimeEntryResponse> UpdateTimeEntry(int id, TimeEntryUpdateRequest timeEntry);
+        List<TimeEntryResponse> DeleteTimeEntry(int id);
     }
 }
