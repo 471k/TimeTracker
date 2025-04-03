@@ -68,6 +68,16 @@ namespace TimeTracker.API.Services
             return result.Adapt<List<TimeEntryResponse>>();
         }
 
+        public TimeEntryResponse? GetTimeEntryById(int id)
+        {
+            var result = _timeEntryRepo.GetTimeEntryById(id);
+            if(result is null)
+            {
+                return null;
+            }
+            return result.Adapt<TimeEntryResponse>();
+        }
+
         public List<TimeEntryResponse> UpdateTimeEntry(int id, TimeEntryUpdateRequest request)
         {
             var updatedEntry = request.Adapt<TimeEntry>();

@@ -37,6 +37,11 @@ namespace TimeTracker.API.Repositories
             return _timeEntries;
         }
 
+        public TimeEntry? GetTimeEntryById(int id)
+        {
+            return _timeEntries.FirstOrDefault(t => t.Id == id);
+        }
+
         public List<TimeEntry>? UpdateTimeEntry(int id, TimeEntry timeEntry)
         {
             var entryToUpdateIndex = _timeEntries.FindIndex(t => t.Id == id);

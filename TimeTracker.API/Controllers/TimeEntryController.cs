@@ -21,7 +21,20 @@ namespace TimeTracker.API.Controllers
         [HttpGet]
         public ActionResult<List<TimeEntryResponse>> GetAllTimeEntries()
         {
+            
             return Ok(_timeEntryService.GetAllTimeEntries());
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<TimeEntryResponse> GetTimeEntryById(int id)
+        {
+            var result = _timeEntryService.GetTimeEntryById(id);
+            if(result is null)
+            {
+                return NotFound("TimeEntry with the given ID was not found.");
+            }
+            return Ok(result);
+            
         }
 
         [HttpPost]
