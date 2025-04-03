@@ -1,14 +1,13 @@
-﻿using System.Net;
-using TimeTracker.Shared.Models;
+﻿
 
 namespace TimeTracker.API.Services
 {
     public interface ITimeEntryService
     {
-        TimeEntryResponse? GetTimeEntryById(int id);
-        List<TimeEntryResponse> GetAllTimeEntries();
-        List<TimeEntryResponse> CreateTimeEntry(TimeEntryCreateRequest timeEntry);
-        List<TimeEntryResponse> UpdateTimeEntry(int id, TimeEntryUpdateRequest timeEntry);
-        List<TimeEntryResponse> DeleteTimeEntry(int id);
+        Task<TimeEntryResponse?> GetTimeEntryById(int id);
+        Task<List<TimeEntryResponse>> GetAllTimeEntries();
+        Task<List<TimeEntryResponse>> CreateTimeEntry(TimeEntryCreateRequest timeEntry);
+        Task<List<TimeEntryResponse>> UpdateTimeEntry(int id, TimeEntryUpdateRequest timeEntry);
+        Task<List<TimeEntryResponse>> DeleteTimeEntry(int id);
     }
 }
