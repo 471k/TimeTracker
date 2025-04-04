@@ -1,6 +1,4 @@
-﻿
-
-namespace TimeTracker.API.Repositories
+﻿namespace TimeTracker.API.Repositories
 {
     public class TimeEntryRepository : ITimeEntryRepository
     {
@@ -11,7 +9,7 @@ namespace TimeTracker.API.Repositories
             _context = context;
         }
 
-        private static List<TimeEntry> _timeEntries = new List<TimeEntry>
+        /*private static List<TimeEntry> _timeEntries = new List<TimeEntry>
         {
             new TimeEntry
             {
@@ -19,7 +17,7 @@ namespace TimeTracker.API.Repositories
                 Project = "Time Tracker App",
                 End = DateTime.Now.AddHours(1)
             }
-        };
+        };*/
 
         public async Task<List<TimeEntry>> CreateTimeEntry(TimeEntry timeEntry)
         {
@@ -68,7 +66,7 @@ namespace TimeTracker.API.Repositories
             return timeEntry;
         }
 
-        public async Task<List<TimeEntry>?> UpdateTimeEntry(int id, TimeEntry timeEntry)
+        public async Task<List<TimeEntry>> UpdateTimeEntry(int id, TimeEntry timeEntry)
         {
             /*var entryToUpdateIndex = _timeEntries.FindIndex(t => t.Id == id);
             if (entryToUpdateIndex == -1)
@@ -82,12 +80,12 @@ namespace TimeTracker.API.Repositories
 
             if(dbTimeEntry is null)
             {
-                return null;
+                throw new EntityNotFoundException($"Entity with ID {id} was not found.");
             }
             dbTimeEntry.Project = timeEntry.Project;
             dbTimeEntry.Start = timeEntry.Start;
             dbTimeEntry.End = timeEntry.End;
-            dbTimeEntry.DateUpdated = timeEntry.DateUpdated;
+            dbTimeEntry.DateUpdated = DateTime.Now;
 
             await _context.SaveChangesAsync();
 

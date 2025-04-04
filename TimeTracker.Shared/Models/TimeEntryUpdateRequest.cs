@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TimeTracker.Shared.Models
 {
-    public class TimeEntryUpdateRequest
-    {
-        public required string Project { get; set; }
-        public DateTime Start { get; set; } = DateTime.Now;
-        public DateTime? End { get; set; }
-    }
+    public record struct TimeEntryUpdateRequest(
+        string Project,
+        DateTime Start,
+        DateTime? End
+        );
 }
