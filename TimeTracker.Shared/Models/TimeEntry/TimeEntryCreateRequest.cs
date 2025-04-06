@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeTracker.Shared.Models
+namespace TimeTracker.Shared.Models.TimeEntry
 {
-    public record struct TimeEntryResponse(
-        int Id,
-        string Project,
+    public record struct TimeEntryCreateRequest(
+        int ProjectId,
         DateTime Start,
         DateTime? End
         );
