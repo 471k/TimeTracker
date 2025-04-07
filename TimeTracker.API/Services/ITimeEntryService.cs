@@ -1,4 +1,4 @@
-﻿
+﻿using TimeTracker.Shared.Models.TimeEntry;
 
 namespace TimeTracker.API.Services
 {
@@ -8,6 +8,7 @@ namespace TimeTracker.API.Services
         Task<List<TimeEntryResponse>> GetAllTimeEntries();
         Task<List<TimeEntryResponse>> CreateTimeEntry(TimeEntryCreateRequest timeEntry);
         Task<List<TimeEntryResponse>> UpdateTimeEntry(int id, TimeEntryUpdateRequest timeEntry);
-        Task<List<TimeEntryResponse>> DeleteTimeEntry(int id);
+        Task<List<TimeEntryResponse>?> DeleteTimeEntry(int id);
+        Task<List<TimeEntryByProjectResponse>> GetTimeEntriesByProject(int projectId);
     }
 }
