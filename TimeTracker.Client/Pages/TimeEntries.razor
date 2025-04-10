@@ -1,20 +1,118 @@
 ﻿@page "/timeentries"
+@inject ITimeEntryService TimeEntryService;
+@inject NavigationManager NavigationManager;
+@implements IDisposable
 
-@inject HttpClient Http
 
 <PageTitle>Time Entries</PageTitle>
 
 <h3>TimeEntries</h3>
 
+<button class="btn btn-primary mb-2" @onclick="CreateTimeEntry">
+	Create Time Entry
+</button>
+
+<QuickGrid Items="FilteredTimeEntries" Pagination="@pagination">
+	<PropertyColumn Property="t => t.Start"/>
+	<PropertyColumn Property="t => t.End"/>
+	<PropertyColumn Property="t => GetDuration(t.Start, t.End)" Title="Duration"/>
+	<PropertyColumn Property="t => t.Project.Name" Title="Project">
+		<ColumnOptions>
+			<div>
+				<input 
+				type="search" 
+				autofocus 
+				@bind="projectFilter" 
+				@bind:event="oninput"
+				placeholder="Project name..."
+				/>
+			</div>
+		</ColumnOptions>
+	</PropertyColumn>
+	<TemplateColumn>
+		<button class="btn btn-primary"
+		onclick="@(() => ShowProject(context.Project.Id))">
+			Show Project
+		</button>
+	</TemplateColumn>
+	<TemplateColumn>
+		<button class="btn btn-primary"
+		onclick="@(() => EditTimeEntry(context.Id))">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+				<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+			</svg>
+		</button>
+	</TemplateColumn>
+</QuickGrid>
+
+<Paginator State="@pagination"/>
+
+@if(projectId > 0)
+{
+	<ProjectDetails ProjectId="projectId"/>
+}
+
 @code {
-	private List<TimeEntryResponse> timeEntries = new List<TimeEntryResponse>();
+	int projectId = 0;
+	private string? projectFilter;
+	PaginationState pagination = new PaginationState { ItemsPerPage = 2 };
+
+	IQueryable<TimeEntryResponse> FilteredTimeEntries
+	{
+		get
+		{
+			var result = TimeEntryService.TimeEntries.AsQueryable();
+
+			if(!string.IsNullOrWhiteSpace(projectFilter))
+			{
+				result = result.Where(t => t.Project.Name
+					.Contains(projectFilter, StringComparison.CurrentCultureIgnoreCase));
+			}
+
+			return result;
+		}
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		var result = await Http.GetFromJsonAsync<List<TimeEntryResponse>>("api/timeentry");
-		if(result != null)
+		await TimeEntryService.GetTimeEntriesByProject(0);
+		TimeEntryService.OnChange += StateHasChanged;
+	}
+
+	private string GetDuration(DateTime? start, DateTime? end)
+	{
+		if(start != null && end != null)
 		{
-			timeEntries = result;
+			var duration = end.Value - start.Value;
+			var result = $"{duration.Hours}h {duration.Minutes}m";
+
+			return result;
 		}
+		return string.Empty;
+	}
+
+	private void ShowProject(int id)
+	{
+		if (projectId == id)
+			return;
+
+		projectId = id;
+		StateHasChanged();
+
+	}
+
+	public void Dispose()
+	{
+		TimeEntryService.OnChange -= StateHasChanged;
+	}
+
+	private void CreateTimeEntry()
+	{
+		NavigationManager.NavigateTo("/timeentry");
+	}
+
+	private void EditTimeEntry(int id)
+	{
+		NavigationManager.NavigateTo($"/timeentry/{id}");
 	}
 }
