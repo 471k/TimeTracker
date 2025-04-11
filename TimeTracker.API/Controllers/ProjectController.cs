@@ -37,7 +37,7 @@ namespace TimeTracker.API.Controllers
             return Ok(await _projectService.CreateProject(project));
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult<List<ProjectResponse>>> UpdateProject(int id, ProjectUpdateRequest project)
         {
             var result = await _projectService.UpdateProject(id, project);
@@ -49,7 +49,7 @@ namespace TimeTracker.API.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<List<ProjectResponse>>> DeleteProject(int id)
         {
             var result = await _projectService.DeleteProject(id);

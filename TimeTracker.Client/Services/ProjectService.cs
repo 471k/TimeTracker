@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Mapster;
+using System.Net.Http.Json;
 using TimeTracker.Shared.Models.Project;
 
 namespace TimeTracker.Client.Services
@@ -23,6 +24,26 @@ namespace TimeTracker.Client.Services
                 Projects = result;
                 OnChange?.Invoke();
             }
+        }
+
+        public async Task<ProjectResponse> GetProjectById(int id)
+        {
+            return await _http.GetFromJsonAsync<ProjectResponse>($"api/project/{id}");
+        }
+
+        public async Task CreateProject(ProjectRequest request)
+        {
+            await _http.PostAsJsonAsync("api/project", request.Adapt<ProjectCreateRequest>());
+        }
+
+        public async Task UpdateProject(int id, ProjectRequest request)
+        {
+            await _http.PutAsJsonAsync($"api/project/{id}", request.Adapt<ProjectUpdateRequest>());
+        }
+
+        public async Task DeleteProject(int id)
+        {
+            await _http.DeleteAsync($"api/project/{id}");
         }
     }
 }

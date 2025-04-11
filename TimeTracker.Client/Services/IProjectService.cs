@@ -7,5 +7,9 @@ namespace TimeTracker.Client.Services
         event Action? OnChange;
         public List<ProjectResponse> Projects { get; set; }
         Task LoadAllProjects();
+        Task<ProjectResponse> GetProjectById(int id);
+        Task CreateProject(ProjectRequest request);
+        Task UpdateProject(int id, ProjectRequest request);
+        Task DeleteProject(int id);
     }
 }
