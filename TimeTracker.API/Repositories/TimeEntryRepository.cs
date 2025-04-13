@@ -3,10 +3,12 @@
     public class TimeEntryRepository : ITimeEntryRepository
     {
         private readonly DataContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public TimeEntryRepository(DataContext context)
+        public TimeEntryRepository(DataContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         /*private static List<TimeEntry> _timeEntries = new List<TimeEntry>
@@ -21,6 +23,14 @@
 
         public async Task<List<TimeEntry>> CreateTimeEntry(TimeEntry timeEntry)
         {
+            var user = await _userContextService.GetUserAsync();
+            if(user == null)
+            {
+                throw new EntityNotFoundException("User was not found");
+            }
+
+            timeEntry.User = user;
+
              _context.TimeEntries.Add(timeEntry);
             await _context.SaveChangesAsync();
 
@@ -39,7 +49,14 @@
             _timeEntries.Remove(entryToDelete);
             return _timeEntries;*/
 
-            var dbTimeEntry = await _context.TimeEntries.FindAsync(id);
+            var userId = _userContextService.GetUserId();
+            if (userId == null)
+                return null;
+
+
+            var dbTimeEntry = await _context.TimeEntries
+                .FirstOrDefaultAsync(te => te.Id == id && te.User.Id == userId);
+
             if(dbTimeEntry is null)
             {
                 return null;
@@ -54,23 +71,35 @@
         public async Task<List<TimeEntry>> GetAllTimeEntries()
         {
             //return _timeEntries;
-            return await _context.TimeEntries.ToListAsync();
+            var userId = _userContextService.GetUserId();
+            if (userId == null)
+                return new List<TimeEntry>();
+
+            return await _context.TimeEntries.Where(t => t.User.Id == userId).ToListAsync();
         }
 
         public async Task<List<TimeEntry>> GetTimeEntriesByProject(int projectId)
         {
+            var userId = _userContextService.GetUserId();
+            if(userId == null)
+            {
+                throw new EntityNotFoundException("User was not found");
+            }
+
             return await _context.TimeEntries
-                .Where(te => te.ProjectId == projectId)
+                .Where(te => te.ProjectId == projectId && te.User.Id == userId)
                 .ToListAsync();
         }
 
         public async Task<TimeEntry?> GetTimeEntryById(int id)
         {
-            //return _timeEntries.FirstOrDefault(t => t.Id == id);
+            var userId = _userContextService.GetUserId();
 
-            var timeEntry = await _context.TimeEntries.FindAsync(id);
-                //.Include(te => te.Project)
-                //.FirstOrDefaultAsync(te => te.Id == id);
+            if (userId == null)
+                return null;
+
+            var timeEntry = await _context.TimeEntries
+                .FirstOrDefaultAsync(te => te.Id == id && te.User.Id == userId);
 
             return timeEntry;
         }
@@ -85,7 +114,16 @@
             _timeEntries [ entryToUpdateIndex ] = timeEntry;
             return _timeEntries;
                         */
-            var dbTimeEntry = await _context.TimeEntries.FindAsync(id);
+
+            var userId = _userContextService.GetUserId();
+            if (userId == null)
+            {
+                throw new EntityNotFoundException("User was not found");
+            }
+
+                        
+            var dbTimeEntry = await _context.TimeEntries
+                .FirstOrDefaultAsync(t => t.Id == id && t.User.Id == userId);
 
             if(dbTimeEntry is null)
             {

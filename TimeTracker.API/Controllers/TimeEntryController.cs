@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Shared.Models.TimeEntry;
 
 namespace TimeTracker.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TimeEntryController : ControllerBase
     {
         private readonly ITimeEntryService _timeEntryService;
