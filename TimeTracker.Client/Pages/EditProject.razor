@@ -20,59 +20,74 @@ else
 <EditForm Model="project" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator/>
 
+    <MyInputText Id="name" Label="Name" @bind-Value="project.Name"/>
+    <MyInputTextArea Id="description" Label="Description" @bind-Value="project.Description"/>
+    <MyInputDateNullable Id="startDate" Label="Start" @bind-Value="project.StartDate" ValidationFor="() => project.StartDate"/>
+    <MyInputDateNullable Id="endDate" Label="End" @bind-Value="project.EndDate" ValidationFor="() => project.EndDate"/>
+
+    @* 
     <div>
         <label for="name">Name</label>
         <InputText 
-        id="name" 
-        @bind-Value="project.Name"
-        class="form-control" />
+            id="name" 
+            @bind-Value="project.Name"
+            class="form-control" />
         <ValidationMessage For="() => project.Name"/>
     </div>
 
     <div>
         <label for="description">Description</label>
         <InputTextArea
-        id="description"
-        @bind-Value="project.Description"
-        class="form-control"
+            id="description"
+            @bind-Value="project.Description"
+            class="form-control"
         />
     </div>
 
     <div>
         <label for="startDate">Start</label>
         <InputDate
-        id="startDate"
-        Type="InputDateType.DateTimeLocal"
-        @bind-Value="project.StartDate"
-        class="form-control"
-        />
+            id="startDate"
+            Type="InputDateType.DateTimeLocal"
+            @bind-Value="project.StartDate"
+            class="form-control" />
     </div>
 
     <div>
         <label for="endDate">End</label>
         <InputDate
-        id="endDate"
-        Type="InputDateType.DateTimeLocal"
-        @bind-Value="project.EndDate"
-        class="form-control"
-        />
+            id="endDate"
+            Type="InputDateType.DateTimeLocal"
+            @bind-Value="project.EndDate"
+            class="form-control"/>
+    </div>
+ *@
+
+    <div class="flex gap-4">
+        @if(Id is not null)
+        {
+            <MyButton Type="button" Text="Delete" Level="MyButton.ButtonLevel.Danger" AddMarginTop OnClick="DeleteProject" />
+        }
+        <MyButton Type="submit" Text="Submit" AddMarginTop/>
     </div>
 
-    @if(Id != null)
+    @* @if(Id != null)
     {
         <button            
-        type="button"
-        class="btn btn-danger mt-2 mx-1"
-        @onclick="DeleteProject">
-            Delete
+            type="button"
+            class="btn btn-danger mt-2 mx-1"
+            @onclick="DeleteProject">
+                Delete
         </button>
     }
 
     <button
-    type="submit"
-    class="btn btn-primary mt-2">
-        Submit
-    </button>
+        type="submit"
+        class="btn btn-primary mt-2">
+            Submit
+    </button> *@
+
+
 </EditForm>
 
 @code {

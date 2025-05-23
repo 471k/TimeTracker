@@ -27,7 +27,7 @@ namespace TimeTracker.API.Services
 
             if (!result.Succeeded)
             {
-                return new LoginResponse(false, "Email or password is wrong.");
+                return new LoginResponse(false, "Username or password is wrong.");
             }
 
             var user = await _userManager.FindByNameAsync(request.UserName);

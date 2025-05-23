@@ -5,27 +5,60 @@
 
 <EditForm Model="loginRequest" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator/>
-    <div>
-        <label for="name">Name</label>
-        <InputText id="name" @bind-Value="loginRequest.UserName" class="form-control"/>
-        <ValidationMessage For="() => loginRequest.UserName"/>
+
+    <MyInputText Label="Name" Id="name" @bind-Value="loginRequest.UserName" ValidationFor="() => loginRequest.UserName"/>
+    <MyInputText Label="Password" Type="password" Id="password" @bind-Value="loginRequest.Password" ValidationFor="() => loginRequest.Password"/>
+
+    @* <div>
+        <label for="name" class="block text-sm font-medium text-gray-700 mt-2">Name</label>
+
+        <InputText id="name" @bind-Value="loginRequest.UserName" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
+        <div class="text-xs text-red-600 font-bold my-1">
+            <ValidationMessage For="() => loginRequest.UserName"  />
+        </div>        
     </div>
 
     <div>
-        <label for="password">Password</label>
-        <InputText id="password" type="password" @bind-Value="loginRequest.Password" class="form-control"/>
-        <ValidationMessage For="() => loginRequest.Password"/>
-    </div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mt-2">Password</label>
+        <InputText id="password" type="password" @bind-Value="loginRequest.Password" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
 
-    <button type="submit" class="btn btn-primary mt-2">Login</button>
+        <div class="text-xs text-red-600 font-bold my-1">
+            <ValidationMessage For="() => loginRequest.Password" />
+        </div>
+
+    </div> *@
+
+    <MyButton Text="Login" Type="submit" AddMarginTop Level="MyButton.ButtonLevel.Secondary"/>
+
+    @* <button type="submit" class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700 mt-2">Login</button> *@
 
 </EditForm>
 
+@if(loginFailed)
+{
+    <div>
+        <span class="text-xs text-red-600 font-bold my-1">@errorMessage</span>
+    </div>
+}
+
 @code {
     LoginRequest loginRequest = new LoginRequest();
+    bool loginFailed = false;
+    string? errorMessage = string.Empty;
 
     async Task HandleSubmit()
     {
-        await AuthService.Login(loginRequest);
+        loginFailed = false;
+        var response = await AuthService.Login(loginRequest);
+        if(!response.IsSuccessful && response.Error != null)
+        {
+            errorMessage = response.Error;
+            loginFailed = true;
+        }
+        else if(!response.IsSuccessful)
+        {
+            errorMessage = "An unexpected error occurred.";
+            loginFailed = true;
+        }
     }
 }

@@ -5,7 +5,33 @@
 <EditForm Model="newUser" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator/>
 
-    <div>
+    <MyInputText 
+    Label="Name" 
+    Id="name" 
+    @bind-Value="newUser.UserName" 
+    ValidationFor="() => newUser.UserName" />
+
+    <MyInputText 
+    Label="E-Mail" 
+    Id="email" 
+    @bind-Value="newUser.Email" 
+    ValidationFor="() => newUser.Email" />
+
+    <MyInputText 
+    Label="Password" 
+    Id="password" 
+    @bind-Value="newUser.Password" 
+    ValidationFor="() => newUser.Password" 
+    Type="password" />
+
+    <MyInputText 
+    Label="Confirm Password" 
+    Id="confirmPassword" 
+    @bind-Value="newUser.ConfirmPassword" 
+    ValidationFor="() => newUser.ConfirmPassword" 
+    Type="password" />
+
+    @* <div>
         <label for="name">Name</label>
         <InputText id="name" @bind-Value="newUser.UserName" class="form-control"/>
         <ValidationMessage For="() => newUser.UserName"/>
@@ -27,18 +53,62 @@
         <label for="confirmPassword">Confirm Password</label>
         <InputText id="confirmPassword" type="password" @bind-Value="newUser.ConfirmPassword" class="form-control"/>
         <ValidationMessage For="() => newUser.ConfirmPassword"/>
-    </div>
+    </div> *@
 
-    <button type="submit" class="btn btn-primary mt-2">Register</button>
+    <MyButton 
+    Type="submit" 
+    Text="Register" 
+    AddMarginTop/>
+
+    @* <button type="submit" class="btn btn-primary mt-2">Register</button> *@
 </EditForm>
+
+
+@if (registrationFailed)
+{
+    
+    @foreach (var error in errors)
+    {
+        <div>
+            <span class="text-xs text-red-600 font-bold my-1">@error</span>
+        </div>
+    }
+}
+
+@if (registrationSuccessful)
+{
+    <div>
+        <span class="text-xs text-green-600 font-bold my-1">
+            Registration successful! You may <a href="login" class="underline">login</a> now. :)
+        </span>
+    </div>
+}
 
 
 
 @code {
     AccountRegistrationRequest newUser = new AccountRegistrationRequest();
+    bool registrationFailed = false;
+    bool registrationSuccessful = false;
+    List<string> errors = new List<string>();
 
     async Task HandleSubmit()
     {
-        await AuthService.Register(newUser);
+        registrationFailed = registrationSuccessful = false;
+        errors = new List<string>();
+
+        var response = await AuthService.Register(newUser);
+        registrationSuccessful = response.IsSuccessful;
+
+        if (!response.IsSuccessful && response.Errors != null)
+        {
+            errors = response.Errors.ToList();
+            registrationFailed = true;
+        }
+        else if(!response.IsSuccessful)
+        {
+            errors.Add("An unexpected error occurred.");
+            registrationFailed = true;
+        }
     }
 }
