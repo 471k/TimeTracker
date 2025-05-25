@@ -74,6 +74,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

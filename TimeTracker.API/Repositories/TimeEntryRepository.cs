@@ -80,14 +80,42 @@
 
         public async Task<List<TimeEntry>> GetTimeEntriesByProject(int projectId)
         {
-            var userId = _userContextService.GetUserId();
-            if(userId == null)
-            {
-                throw new EntityNotFoundException("User was not found");
-            }
+            string? userId = CheckUserId();
 
             return await _context.TimeEntries
                 .Where(te => te.ProjectId == projectId && te.User.Id == userId)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<TimeEntry>> GetTimeEntriesByYear(int year)
+        {
+            var userId = CheckUserId();
+
+            return await _context.TimeEntries
+                .Where(te => te.Start.Year == year && te.User.Id == userId)
+                .ToListAsync();
+        }
+
+        public async Task<List<TimeEntry>> GetTimeEntriesByMonth(int month, int year)
+        {
+            var userId = CheckUserId();
+
+            return await _context.TimeEntries
+                .Where(te => te.Start.Month == month 
+                          && te.Start.Year == year 
+                          && te.User.Id == userId)
+                .ToListAsync();
+        }
+
+        public async Task<List<TimeEntry>> GetTimeEntriesByDay(int day, int month, int year)
+        {
+            var userId = CheckUserId();
+
+            return await _context.TimeEntries
+                .Where(te => te.Start.Day == day 
+                          && te.Start.Month == month 
+                          && te.Start.Year == year)
                 .ToListAsync();
         }
 
@@ -139,6 +167,18 @@
             return await GetAllTimeEntries();
 
 
+        }
+
+
+        private string CheckUserId()
+        {
+            var userId = _userContextService.GetUserId();
+            if (userId == null)
+            {
+                throw new EntityNotFoundException("User was not found");
+            }
+
+            return userId;
         }
     }
 }

@@ -1,38 +1,41 @@
 ﻿@page "/login"
 @inject IAuthService AuthService
 
-<h3>Login</h3>
+<div class="lg:px-80">
+    <h3>Login</h3>
 
-<EditForm Model="loginRequest" OnValidSubmit="HandleSubmit">
-    <DataAnnotationsValidator/>
+    <EditForm Model="loginRequest" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator/>
 
-    <MyInputText Label="Name" Id="name" @bind-Value="loginRequest.UserName" ValidationFor="() => loginRequest.UserName"/>
-    <MyInputText Label="Password" Type="password" Id="password" @bind-Value="loginRequest.Password" ValidationFor="() => loginRequest.Password"/>
+        <MyInputText Label="Name" Id="name" @bind-Value="loginRequest.UserName" ValidationFor="() => loginRequest.UserName"/>
+        <MyInputText Label="Password" Type="password" Id="password" @bind-Value="loginRequest.Password" ValidationFor="() => loginRequest.Password"/>
 
-    @* <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 mt-2">Name</label>
+        @* <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mt-2">Name</label>
 
-        <InputText id="name" @bind-Value="loginRequest.UserName" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
-        <div class="text-xs text-red-600 font-bold my-1">
-            <ValidationMessage For="() => loginRequest.UserName"  />
-        </div>        
-    </div>
-
-    <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 mt-2">Password</label>
-        <InputText id="password" type="password" @bind-Value="loginRequest.Password" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
-
-        <div class="text-xs text-red-600 font-bold my-1">
-            <ValidationMessage For="() => loginRequest.Password" />
+            <InputText id="name" @bind-Value="loginRequest.UserName" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
+            <div class="text-xs text-red-600 font-bold my-1">
+                <ValidationMessage For="() => loginRequest.UserName"  />
+            </div>        
         </div>
 
-    </div> *@
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mt-2">Password</label>
+            <InputText id="password" type="password" @bind-Value="loginRequest.Password" class="mt-0.5 p-2 w-full rounded border-gray-300 shadow-sm sm:text-sm" />
 
-    <MyButton Text="Login" Type="submit" AddMarginTop Level="MyButton.ButtonLevel.Secondary"/>
+            <div class="text-xs text-red-600 font-bold my-1">
+                <ValidationMessage For="() => loginRequest.Password" />
+            </div>
 
-    @* <button type="submit" class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700 mt-2">Login</button> *@
+        </div> *@
 
-</EditForm>
+        <MyButton Text="Login" Type="submit" AddMarginTop />
+
+        @* <button type="submit" class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700 mt-2">Login</button> *@
+
+    </EditForm>
+
+</div>
 
 @if(loginFailed)
 {
